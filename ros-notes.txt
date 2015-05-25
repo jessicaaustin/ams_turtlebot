@@ -1,0 +1,63 @@
+
+test that serial cord works
+-----
+
+plug in cable to roomba (can be charging)
+
+$ screen /dev/ttyUSB0 115200
+
+should see some messages from the roomba
+
+
+
+Install ROS Indigo
+-------
+
+Running Linux Mint 17 64-bit
+
+following http://insane-on-linux.blogspot.com/2014/10/installing-ros-indigo-on-mint-17.html
+
+$ sudo sh -c '. /etc/lsb-release && echo "deb http://mirror.umd.edu/packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list' 
+$ wget https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -O - | sudo apt-key add - 
+$ sudo apt-get update 
+$ sudo apt-get install ros-indigo-desktop-full
+
+
+Install Turtlebot stuff
+----
+
+
+http://wiki.ros.org/turtlebot/Tutorials/indigo/Turtlebot%20Installation
+
+$ sudo apt-get install ros-indigo-turtlebot ros-indigo-turtlebot-apps ros-indigo-turtlebot-interactions ros-indigo-turtlebot-simulator ros-indigo-kobuki-ftdi ros-indigo-rocon-remocon ros-indigo-rocon-qt-library ros-indigo-ar-track-alvar-msgs
+
+
+# need to set up for the roomba, not the create
+rosrun create_node turtlebot_node.py _robot_type:=roomba   # if you're running the node directly
+export TURTLEBOT_BASE=roomba    # if you're running turtlebot_bringup
+
+
+Running
+----
+
+http://wiki.ros.org/turtlebot_bringup/Tutorials/indigo/TurtleBot%20Bringup
+http://wiki.ros.org/turtlebot_bringup/Tutorials/indigo/PC%20Bringup
+
+1. Ensure the roomba is charged
+1. Plug in the usb cable and verify is connected (use screen cmd above)
+1. Turn on the roomba by pressing the power button 
+1. Launch the commands below
+
+
+# main stack
+roslaunch turtlebot_bringup minimal.launch --screen
+
+# dashboard
+roslaunch turtlebot_dashboard turtlebot_dashboard.launch
+
+# (opt) visualization
+roslaunch turtlebot_rviz_launchers view_model.launch --screen
+
+# (opt) keyboard teleop
+roslaunch turtlebot_teleop keyboard_teleop.launch --screen
+
