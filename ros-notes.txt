@@ -8,6 +8,8 @@ $ screen /dev/ttyUSB0 115200
 
 should see some messages from the roomba
 
+(if screen exits immediately, check permissions on /dev/ttyUSB0 and make sure that the local turtlebot user is a member of the dialout group)
+
 
 
 Install ROS Indigo
@@ -36,6 +38,38 @@ $ sudo apt-get install ros-indigo-turtlebot ros-indigo-turtlebot-apps ros-indigo
 rosrun create_node turtlebot_node.py _robot_type:=roomba   # if you're running the node directly
 export TURTLEBOT_BASE=roomba    # if you're running turtlebot_bringup
 
+#
+# on the TURTLEBOT PC, append the following to your .bashrc:
+#
+
+# http://wiki.ros.org/turtlebot/Tutorials/indigo/Create%20Base
+export TURTLEBOT_NAME=ams_turtlebot
+export TURTLEBOT_BASE=roomba
+export TURTLEBOT_STACKS=circles
+export TURTLEBOT_3D_SENSOR=asus_xtion_pro
+export TURTLEBOT_SERIAL_PORT=/dev/ttyUSB0
+
+# http://wiki.ros.org/turtlebot/Tutorials/indigo/Network%20Configuration
+export ROS_MASTER_URI=http://localhost:11311
+export ROS_HOSTNAME=IP_OF_TURTLEBOT
+
+# note: this step will take a while, so you might want to comment
+#       it out when not doing active ROS development
+source /opt/ros/indigo/setup.bash
+
+#
+# on the HOST PC, append the following to your .bashrc:
+#
+
+# http://wiki.ros.org/turtlebot/Tutorials/indigo/Network%20Configuration
+export ROS_MASTER_URI=http://IP_OF_TURTLEBOT:11311
+export ROS_HOSTNAME=localhost
+
+# note: this step will take a while, so you might want to comment
+#       it out when not doing active ROS development
+source /opt/ros/indigo/setup.bash
+
+
 
 Running
 ----
@@ -45,19 +79,30 @@ http://wiki.ros.org/turtlebot_bringup/Tutorials/indigo/PC%20Bringup
 
 1. Ensure the roomba is charged
 1. Plug in the usb cable and verify is connected (use screen cmd above)
+1. Ensure that network setup is correct (you may have to change IPs)
+ * see http://wiki.ros.org/turtlebot/Tutorials/indigo/Network%20Configuration
 1. Turn on the roomba by pressing the power button 
-1. Launch the commands below
+1. Launch the commands below 
 
 
-# main stack
+
+# on the turtlebot pc:
+# setup ROS
+source /opt/ros/indigo/setup.bash
+# launch main stack
 roslaunch turtlebot_bringup minimal.launch --screen
 
+# on the host pc:
+# test network setup
+rostopic list
 # dashboard
 roslaunch turtlebot_dashboard turtlebot_dashboard.launch
 
+# on the host pc:
 # (opt) visualization
 roslaunch turtlebot_rviz_launchers view_model.launch --screen
 
+# on the host pc:
 # (opt) keyboard teleop
 roslaunch turtlebot_teleop keyboard_teleop.launch --screen
 
